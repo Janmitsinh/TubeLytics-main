@@ -1,0 +1,27 @@
+@(stats: List[Map.Entry[String, Long]])
+
+@main("Word-Stat") {
+
+    <div style="text-align: center; color: black; margin-bottom: 20px;">
+        <h1 style="font-size: 24px; font-weight: bold;">Word Statistics</h1>
+    </div>
+
+    <div style="display: flex; justify-content: center; align-items: center; padding: 20px;">
+        <table style="width: 50%; border-collapse: collapse; background-color: #f9f9f9; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);">
+            <thead>
+                <tr style="background-color: #4CAF50; color: white;">
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Word</th>
+                    <th style="padding: 10px; text-align: left; border: 1px solid #ddd;">Count</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(person <- stats) {
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ddd;">@person.getKey()</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">@person.getValue()</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,0 +1,79 @@
+@import com.google.api.services.youtube.model.SearchResult
+@(tag: String, videos: List[SearchResult])
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Videos Tagged: @tag</title>
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/main.css")">
+        <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f9;
+                    color: #333;
+                }
+                .container {
+                    max-width: 800px;
+                    margin: 20px auto;
+                    padding: 20px;
+                    background: #fff;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+                h1 {
+                    color: #0056b3;
+                    text-align: center;
+                }
+                .video-list {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 20px;
+                    margin-top: 20px;
+                }
+                .video-card {
+                    background: #f9f9f9;
+                    padding: 10px;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    text-align: center;
+                }
+                .video-card img {
+                    width: 100%;
+                    height: auto;
+                    border-radius: 8px;
+                }
+                .video-card a {
+                    display: block;
+                    font-size: 16px;
+                    color: #0056b3;
+                    font-weight: bold;
+                    text-decoration: none;
+                    margin-top: 10px;
+                }
+                .video-card p {
+                    color: #555;
+                    font-size: 14px;
+                    margin-top: 8px;
+                }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Videos Tagged: "@tag"</h1>
+            <div class="video-list">
+            @for(video <- videos) {
+                <div class="video-card">
+                    <img src="@video.getSnippet.getThumbnails.getMedium.getUrl" alt="Video
+Thumbnail">
+                    <a href="https://www.youtube.com/watch?v=@video.getId.getVideoId"
+                    target="_blank">
+                    @video.getSnippet.getTitle
+                    </a>
+                    <p>@video.getSnippet.getDescription</p>
+                    <p><strong>Published:</strong> @video.getSnippet.getPublishedAt</p>
+                </div>
+            }
+            </div>
+        </div>
+    </body>
+</html>

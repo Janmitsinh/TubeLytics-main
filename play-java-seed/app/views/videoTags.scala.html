@@ -1,0 +1,73 @@
+@import com.google.api.services.youtube.model.Video
+@(videoDetails: Video, tags: List[String])
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Tags for Video: @videoDetails.getSnippet.getTitle</title>
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/main.css")">
+        <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f9;
+                    color: #333;
+                }
+                .container {
+                    max-width: 800px;
+                    margin: 20px auto;
+                    padding: 20px;
+                    background: #fff;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+                h1, h2 {
+                    color: #0056b3;
+                    text-align: center;
+                }
+                .video-details {
+                    margin-bottom: 20px;
+                }
+                .tags-list {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    margin-top: 20px;
+                }
+                .tag-link {
+                    padding: 10px;
+                    background: #f9f9f9;
+                    border-radius: 8px;
+                    text-decoration: none;
+                    color: #0056b3;
+                    font-weight: bold;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                }
+                .tag-link:hover {
+                    background-color: #eef;
+                }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Video Details</h1>
+            <div class="video-details">
+                <img src="@videoDetails.getSnippet.getThumbnails.getMedium.getUrl" alt="Video Thumbnail" style="width: 100%; height: auto; border-radius: 8px;">
+                <h2>@videoDetails.getSnippet.getTitle</h2>
+                <p>@videoDetails.getSnippet.getDescription</p>
+                <p><strong>Channel:</strong> @videoDetails.getSnippet.getChannelTitle</p>
+                <p><strong>Published:</strong> @videoDetails.getSnippet.getPublishedAt</p>
+            </div>
+            <h2>Tags</h2>
+            <div class="tags-list">
+            @if(tags.isEmpty) {
+                <p>No tags found for this video.</p>
+            } else {
+                @for(tag <- tags) {
+                    <a href="@routes.HomeController.videosByTag(tag)" class="tag-link" target="_blank">@tag</a>
+                }
+            }
+            </div>
+        </div>
+    </body>
+</html>

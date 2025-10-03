@@ -1,0 +1,130 @@
+@import com.google.api.services.youtube.model.Channel
+@import com.google.api.services.youtube.model.SearchResult
+@import java.time.Instant
+@import java.time.ZoneId
+@import java.time.format.DateTimeFormatter
+
+@(channel: Channel, videos: List[SearchResult])
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>@channel.getSnippet.getTitle - Channel Profile</title>
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/main.css")">
+        <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f9;
+                    color: #333;
+                }
+                .container {
+                    max-width: 800px;
+                    margin: 20px auto;
+                    padding: 20px;
+                    background: #fff;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+                .channel-info, .video-list {
+                    margin-top: 20px;
+                }
+                h1 {
+                    color: #0056b3;
+                    text-align: center;
+                }
+                .channel-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                }
+                .channel-info img {
+                    width: 100px;
+                    height: 100px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+                .channel-details {
+                    flex-grow: 1;
+                }
+                .channel-details p {
+                    margin: 5px 0;
+                    line-height: 1.6;
+                }
+                .video-list {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 20px;
+                }
+                .video-card {
+                    background: #f9f9f9;
+                    padding: 10px;
+                    border-radius: 8px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    text-align: center;
+                }
+                .video-card img {
+                    width: 100%;
+                    height: auto;
+                    border-radius: 8px;
+                }
+                .video-card a {
+                    display: block;
+                    font-size: 16px;
+                    color: #0056b3;
+                    font-weight: bold;
+                    text-decoration: none;
+                    margin-top: 10px;
+                }
+                .video-card p {
+                    color: #555;
+                    font-size: 14px;
+                    margin-top: 8px;
+                }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>Channel Profile</h2>
+            <h1>@channel.getSnippet.getTitle</h1>
+
+            <div class="channel-info">
+                <img src="@channel.getSnippet.getThumbnails.getDefault.getUrl" alt="Channel Thumbnail">
+                <div class="channel-details">
+                    <p><strong>Description:</strong> @channel.getSnippet.getDescription</p>
+                    <p><strong>Subscribers:</strong> @channel.getStatistics.getSubscriberCount</p>
+                    <p><strong>Total Views:</strong> @channel.getStatistics.getViewCount</p>
+                    <p><strong>Total Videos:</strong> @channel.getStatistics.getVideoCount</p>
+                    @if(channel.getSnippet.getCountry != null) {
+                        <p><strong>Country:</strong> @channel.getSnippet.getCountry</p>
+                    }
+                    @if(channel.getSnippet.getCustomUrl != null) {
+                        <p><strong>Custom URL:</strong> <a href="https://www.youtube.com/@channel.getSnippet.getCustomUrl" target="_blank">www.youtube.com/@channel.getSnippet.getCustomUrl</a></p>
+                    }
+
+                    @defining(DateTimeFormatter.ofPattern("MMMM dd, yyyy").withZone(ZoneId.systemDefault())) { formatter =>
+                        <p><strong>Channel Created:</strong> @formatter.format(Instant.ofEpochMilli(channel.getSnippet.getPublishedAt.getValue))</p>
+                    }
+
+
+                </div>
+            </div>
+
+            <h2>Latest Videos</h2>
+            <div class="video-list">
+            @for(video <- videos) {
+                <div class="video-card">
+                    <img src="@video.getSnippet.getThumbnails.getMedium.getUrl" alt="Video Thumbnail">
+                    <a href="https://www.youtube.com/watch?v=@video.getId.getVideoId" target="_blank">
+                    @video.getSnippet.getTitle
+                    </a>
+                    <p>@video.getSnippet.getDescription</p>
+                    @defining(DateTimeFormatter.ofPattern("MMMM dd, yyyy").withZone(ZoneId.systemDefault())) { formatter =>
+                        <p><strong>Published:</strong> @formatter.format(Instant.ofEpochMilli(video.getSnippet.getPublishedAt.getValue))</p>
+                    }
+                </div>
+            }
+            </div>
+        </div>
+    </body>
+</html>
